@@ -1,35 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import './App.css';
 
-const App = () => {
-    const ecosystemList = ['Cloud Services', 'AI Models', 'Data Analytics', 'Integration Tools'];
-    const features = ['Real-time Insights', 'Scalable Solutions', 'User-friendly Interface', 'Robust Security'];
+function App() {
+    const [ecosystems, setEcosystems] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchEcosystems();
+    }, []);
+
+    const fetchEcosystems = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/api/ecosystems');
+            const data = await response.json();
+            setEcosystems(data);
+        } catch (error) {
+            console.error('Error fetching ecosystems:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
-        <div>
-            <h1>VersaCore AI Dashboard</h1>
-            <section>
-                <h2>Ecosystem</h2>
-                <ul>
-                    {ecosystemList.map((ecosystem, index) => (
-                        <li key={index}>{ecosystem}</li>
-                    ))}
-                </ul>
-            </section>
-            <section>
-                <h2>Features</h2>
-                <ul>
-                    {features.map((feature, index) => (
-                        <li key={index}>{feature}</li>
-                    ))}
-                </ul>
-            </section>
-            <section>
-                <h2>Get Started</h2>
-                <button onClick={() => alert('Sign Up for Free!')}>Sign Up</button>
-                <button onClick={() => alert('Contact Us')}>Contact Us</button>
-            </section>
+        <div className="App">
+            <header className="App-header">
+                <h1>VersaCore AI</h1>
+                <p>Modular Ecosystems for Adaptive Business Operations</p>
+            </header>
+            <main className="App-main">
+                <section className="dashboard">
+                    <h2>My Ecosystems</h2>
+                    {loading ? (
+                        <p>Loading ecosystems...</p>
+                    ) : ecosystems.length > 0 ? (
+                        <ul>
+                            {ecosystems.map((ecosystem, index) => (
+                                <li key={index}>{ecosystem.name || 'Unnamed Ecosystem'}</li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No ecosystems yet. Create one to get started!</p>
+                    )}
+                </section>
+                <section className="features">
+                    <h2>Key Features</h2>
+                    <ul>
+                        <li>🎨 Mode Graph Builder - Visualize your business modes</li>
+                        <li>📦 Module Library - Access 10+ modular components</li>
+                        <li>⚙️ Physics & Econ Sim - Real-time collision & ROI analysis</li>
+                        <li>📋 SOP Generator - Auto-generate standard operating procedures</li>
+                        <li>🛠️ BOM Calculator - Automatic bill of materials with pricing</li>
+                        <li>📤 File Export - PDF, DXF, JSON, XLSX exports</li>
+                        <li>🏪 Marketplace - Buy, sell, and share custom modules</li>
+                        <li>♻️ Sustainability - Eco-rating & circular design pathways</li>
+                    </ul>
+                </section>
+                <section className="cta">
+                    <button className="btn-primary">Create New Ecosystem</button>
+                    <button className="btn-secondary">Browse Examples</button>
+                    <button className="btn-secondary">Learn More</button>
+                </section>
+            </main>
+            <footer className="App-footer">
+                <p>&copy; 2026 VersaCore AI. All rights reserved.</p>
+            </footer>
         </div>
     );
-};
+}
 
 export default App;
